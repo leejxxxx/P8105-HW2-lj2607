@@ -19,12 +19,3 @@ nyc_transit_data <- read.csv("Datasets/NYC_Transit_Subway_Entrance_And_Exit_Data
 head(nyc_transit_data,5)
 ```
 
-=======
----
-title: "P8105-HW2-lj2607"
-author: "Li Jiang"
-date: "2024-10-01"
-output: github_document
----
-
->>>>>>> 9f6592b9456c40bd9787f24b3824cacc1504f3ca
