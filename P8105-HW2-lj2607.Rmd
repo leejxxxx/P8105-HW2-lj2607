@@ -5,3 +5,16 @@ date: "2024-10-01"
 output: github_document
 ---
 
+```{r}
+#load the required packages
+library(tidyverse)
+```
+
+```{r}
+#importing data table
+nyc_transit_data <- read.csv("Datasets/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
+
+#Visually inspect part of the dataset
+head(nyc_transit_data,5)
+```
+
