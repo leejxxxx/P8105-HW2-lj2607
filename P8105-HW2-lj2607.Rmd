@@ -19,3 +19,22 @@ nyc_transit_data <- read.csv("Datasets/NYC_Transit_Subway_Entrance_And_Exit_Data
 head(nyc_transit_data,5)
 ```
 
+```{r}
+#check the variable names
+names(nyc_transit_data)
+
+#clean up variable names
+nyc_transit_data = janitor::clean_names(nyc_transit_data)
+names(nyc_transit_data)
+```
+
+```{r}
+#clean the data and retain the variable as required 
+nyc_transit_clean <- nyc_transit_data %>%
+  select(division, line, station_name = station_name, station_latitude, station_longitude, 
+         route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11,
+         entry, vending, entrance_type, ada)
+
+view(nyc_transit_clean)
+```
+
