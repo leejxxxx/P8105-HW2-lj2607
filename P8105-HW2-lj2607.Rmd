@@ -11,51 +11,91 @@ output: github_document
 ```{r}
 #load the required packages
 library(tidyverse)
-```
-
-```{r}
-#importing data table
-nyc_transit_data <- read.csv("Datasets/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
-
-#Visually inspect part of the dataset
-head(nyc_transit_data,5)
-```
-
-```{r}
-#check the variable names
-names(nyc_transit_data)
-
-#clean up variable names
-nyc_transit_data = janitor::clean_names(nyc_transit_data)
-names(nyc_transit_data)
+library(readxl)
 ```
 
 ```{r}
 #clean the data and retain the variable as required 
-nyc_transit_clean <- nyc_transit_data %>%
-  select(division, line, station_name = station_name, station_latitude, station_longitude, 
-         route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11,
-         entry, vending, entrance_type, ada) %>%
-   mutate(entry = case_match(
-          entry,
-          "YES" ~ TRUE,
-          "NO" ~ FALSE))
+trans_ent = 
+  read_csv(
+    "Datasets/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",
+    col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c")) |> 
+  janitor::clean_names() |> 
+  select(
+    line, station_name, station_latitude, station_longitude, 
+    starts_with("route"), entry, exit_only, vending, entrance_type, 
+    ada) |> 
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))
 
 #visually check the dataset
-view(nyc_transit_clean)
+view(trans_ent)
 ```
 
 ```{r}
 #check the size of dataset
 
-nrow(nyc_transit_clean)
-ncol(nyc_transit_clean)
+nrow(trans_ent)
+ncol(trans_ent)
 ```
 
 Description of the dataset nyc_transit_clean:
 
-The dataset has `r ncol(nyc_transit_clean)` columns and `r nrow(nyc_transit_clean)` rows. The dimenison of the resulting data set is : `r dim(nyc_transit_clean)`. The dataset contain variables : `r names(nyc_transit_clean)`. The data are not tidy because the route number is spread across 11 columns and 
+I currently cleaned the original dataset and retained line, station_name, station_latitude, station_longitude, route, entry, exit_only, vending, entrance_type, ada. I also converted entry to logical variable. The sesulting dataset has `r ncol(trans_ent)` columns and `r nrow(trans_ent)` rows. The dimenison of the resulting data set is : `r dim(trans_ent)`. The dataset contain variables : `r names(trans_ent)`. As it stands, these data are not "tidy": route number should be a variable, as should route.
 
+```{r}
+#Number of distinct station
+trans_ent |> 
+  select(station_name, line) |> 
+  distinct()
+```
+There are 465 distinct station.
+
+```{r}
+#Number of distinct station that are ADA compliant
+trans_ent |> 
+  filter(ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+```
+There are 84 ADA compliant station.
+
+```{r}
+#compute the proportion of station entrances / exits without vending allow entrance
+trans_ent |> 
+  filter(vending == "NO") |> 
+  pull(entry) |> 
+  mean()
+```
+The proportion of station entrances / exits without vending allow entrance is 0.3770492
+
+
+```{r}
+#identify stations that serve the A train
+trans_ent |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A") |> 
+  select(station_name, line) |> 
+  distinct()
+```
+
+There are 60 distinct stations servcing the A train.
+
+```{r}
+#assess how many of these are ADA compliant
+trans_ent |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") |> 
+  filter(route == "A", ada == TRUE) |> 
+  select(station_name, line) |> 
+  distinct()
+```
+
+17 of these are ADA compliant
 
 
 #Problem 2
@@ -136,7 +176,5 @@ trash_wheel_data =
 view(trash_wheel_data)
 ```
 
-trash_wheel_data is composed of three datasets:mr_trash_data, prof_trash_data, gwynnda_trash_data.
-There are `r nrow(trash_wheel_data)` rows and `r ncol(trash_wheel_data)` in dataset
-and key variable include `r name(trash_wheel_data)`. The number of observation in datset is `r nrow(trash_wheel_data)`. The total weight of trash collected by professor trash wheel is 246.74 tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
+Trash_wheel_data is composed of three datasets: mr_trash_data, prof_trash_data, gwynnda_trash_data. There are `r nrow(trash_wheel_data)` rows and `r ncol(trash_wheel_data)` in datase and key variable include `r names(trash_wheel_data)`. The number of observation in datset is `r nrow(trash_wheel_data)`. The total weight of trash collected by professor trash wheel is 246.74 tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
 
