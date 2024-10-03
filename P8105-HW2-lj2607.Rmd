@@ -260,10 +260,15 @@ viewership <- read_csv("Datasets/viewers.csv") %>%
               pivot_longer(
               cols = series_1:series_10,
               names_to = "series",
-              names_prefix = "series_")
+              values_to = "viewership",
+              names_prefix = "series_")%>%
               mutate(
               series = as.numeric(series),
               episode = as.numeric(episode))
   
 knitr::kable(head(viewership, 10), caption = "First 10 rows")
 ```
+
+
+
+
