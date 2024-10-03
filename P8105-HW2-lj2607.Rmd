@@ -44,3 +44,13 @@ nyc_transit_clean <- nyc_transit_data %>%
 view(nyc_transit_clean)
 ```
 
+```{r}
+#check the size of dataset
+
+nrow(nyc_transit_clean)
+ncol(nyc_transit_clean)
+```
+
+Description of the dataset nyc_transit_clean:
+
+The dataset has `r ncol(nyc_transit_clean)` columns(variables) and `r nrow(nyc_transit_clean)` rows. The dimenison of the resulting data set is : `r dim(nyc_transit_clean)`. The dataset contain variables : `r names(nyc_transit_clean)`. The data are not tidy because the route number is spread across 11 columns and 
