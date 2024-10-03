@@ -251,4 +251,19 @@ winners_table <-winners %>%
                 values_from = baker)
 knitr::kable(winners_table)
 ```
-
+I created a reader-friendly table based on `results` dataset and presented winners across seasons 5 to 10. I have not detected predictability.
+ 
+```{r}
+#import viewership dataset
+viewership <- read_csv("Datasets/viewers.csv") %>% 
+              janitor::clean_names() %>% 
+              pivot_longer(
+              cols = series_1:series_10,
+              names_to = "series",
+              names_prefix = "series_")
+              mutate(
+              series = as.numeric(series),
+              episode = as.numeric(episode))
+  
+knitr::kable(head(viewership_df, 10), caption = "First 10 rows")
+```
