@@ -101,11 +101,6 @@ trans_ent |>
 #Problem 2
 
 ```{r}
-# load the package
-
-library(tidyverse)
-library(readxl)
-
 # Import Mr.Trash Wheel dataset, specifying the sheet and range
 
 mr_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
@@ -177,4 +172,83 @@ view(trash_wheel_data)
 ```
 
 Trash_wheel_data is composed of three datasets: mr_trash_data, prof_trash_data, gwynnda_trash_data. There are `r nrow(trash_wheel_data)` rows and `r ncol(trash_wheel_data)` in datase and key variable include `r names(trash_wheel_data)`. The number of observation in datset is `r nrow(trash_wheel_data)`. The total weight of trash collected by professor trash wheel is 246.74 tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
+
+
+##problem 3
+
+```{r}
+#Import baker dataset
+
+bakers <- read_csv("Datasets/bakers.csv",
+                   na = c("NA", "", ".")) %>%
+          janitor::clean_names() %>%
+          separate(baker_name, into = c("baker", "last_name"), sep = " ")
+
+#visually inspect the dataset
+view(bakers)
+```
+
+```{r}
+#Import bakes dataset
+
+bakes <- read_csv("Datasets/bakes.csv",
+                   na = c("NA", "", ".")) %>%
+         janitor::clean_names()
+
+#visually inspect the dataset
+view(bakes)
+```
+
+```{r}
+#Import results dataset
+
+results <- read_csv("Datasets/results.csv",
+                   na = c("NA", "", "."),skip=2) %>%
+          janitor::clean_names()%>%
+          mutate(series = as.numeric(series),
+                 episode = as.numeric(episode))
+
+#visually inspect the dataset
+view(results)
+```
+
+```{r}
+#use anti-join to detect differences--missing value in bake
+missing_bake <- anti_join(bakers,bakes)
+view(missing_baker)
+
+#use anti-join to detect differences--missing value in results
+missing_results <- anti_join(bakers,results, by = "baker")
+view(missing_results)
+```
+
+```{r}
+#Merge three datasets
+results_bakes <- left_join(bakes, results, by = c("baker", "series", "episode"))
+
+fianl_merge <- left_join(results_bakes, bakers, by = c("baker", "series"))%>%
+               select(series, episode, baker, baker_last_name, baker_age, baker_occupation, 
+                      hometown)
+view(fianl_merge)
+```
+
+I imported three datasets: bakers, bakes, and results, assigned corresponding NA values, and cleaned the variable names. I split the full names into two first name and last names and convert episode and series to numeric variable. I was able to identify the missing result as jo wheatley.
+
+Next, I used left_join to merge all three datasets into one dataset. This combined dataset contains details about the bakers' backgrounds (age, hometown, etc.), signature bakes, showstoppers, and their results (whether they progressed or were eliminated). Since the bakes dataset is incomplete, I retain the following variable:series, episode, baker, baker_last_name, baker_age, baker_occupation, hometown
+
+```{r}
+#create a reader-friendly table showing the winner in season 5 through 10
+winners <-
+  results %>% 
+  filter(series <= 10, series >=5) %>% 
+  filter(result == c("WINNER", "STAR BAKER"))%>% 
+  select(series, episode, baker)
+view(winners)
+
+winners_table <-winners %>%
+                pivot_wider(
+                names_from = series,
+                values_from = baker)
+knitr::kable(winners_table)
+```
 
