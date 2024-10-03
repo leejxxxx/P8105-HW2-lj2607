@@ -37,10 +37,9 @@ nyc_transit_clean <- nyc_transit_data %>%
          route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11,
          entry, vending, entrance_type, ada) %>%
    mutate(entry = case_match(
-     entry,
-  "YES" ~ TRUE,
-  "NO" ~ FALSE
-))
+          entry,
+          "YES" ~ TRUE,
+          "NO" ~ FALSE))
 
 #visually check the dataset
 view(nyc_transit_clean)
@@ -70,9 +69,9 @@ library(readxl)
 # Import Mr.Trash Wheel dataset, specifying the sheet and range
 
 mr_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
-                   sheet = 'Mr. Trash Wheel',
-                   range = "A2:N653",
-                   na = c("NA", "", ".")) %>% 
+                             sheet = 'Mr. Trash Wheel',
+                             range = "A2:N653",
+                             na = c("NA", "", ".")) %>% 
                    janitor::clean_names() %>% # use reasonable variable names
                    drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
                    mutate(sports_balls = as.integer(round(sports_balls,digits = 0)),
@@ -88,9 +87,9 @@ view(mr_trash_data)
 #Import Professor.Trash Wheel dataset, specifying the sheet and range
 
 prof_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
-                   sheet = 'Professor Trash Wheel',
-                   range = "A2:M120",
-                   na = c("NA", "", ".")) %>% 
+                              sheet = 'Professor Trash Wheel',
+                              range = "A2:M120",
+                              na = c("NA", "", ".")) %>% 
                    janitor::clean_names() %>% # use reasonable variable names
                    drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
                    mutate(trash_wheel = "prof_trash") 
@@ -98,5 +97,25 @@ prof_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx"
 
 # visually inspect dataset
 view(prof_trash_data)
+```
+
+```{r}
+#Import Gwynnda Trash Wheel dataset, specifying the sheet and range
+
+gwynnda_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
+                              sheet = 'Gwynnda Trash Wheel',
+                              range = "A2:L265",
+                              na = c("NA", "", ".")) %>% 
+                   janitor::clean_names() %>% # use reasonable variable names
+                   drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
+                   mutate(trash_wheel = "gwynnda_trash") 
+                                              # creating additional variable recording trash_wheel        
+
+# visually inspect dataset
+view(gwynnda_trash_data)
+```
+
+```{r}
+
 ```
 
