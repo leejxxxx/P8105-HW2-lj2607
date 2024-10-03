@@ -6,6 +6,8 @@ date: "2024-10-01"
 output: github_document
 ---
 
+#Problem 1
+
 ```{r}
 #load the required packages
 library(tidyverse)
@@ -54,3 +56,47 @@ ncol(nyc_transit_clean)
 Description of the dataset nyc_transit_clean:
 
 The dataset has `r ncol(nyc_transit_clean)` columns(variables) and `r nrow(nyc_transit_clean)` rows. The dimenison of the resulting data set is : `r dim(nyc_transit_clean)`. The dataset contain variables : `r names(nyc_transit_clean)`. The data are not tidy because the route number is spread across 11 columns and 
+
+
+
+#Problem 2
+
+```{r}
+# load the package
+
+library(tidyverse)
+library(readxl)
+
+# Import Mr.Trash Wheel dataset, specifying the sheet and range
+
+mr_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
+                   sheet = 'Mr. Trash Wheel',
+                   range = "A2:N653",
+                   na = c("NA", "", ".")) %>% 
+                   janitor::clean_names() %>% # use reasonable variable names
+                   drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
+                   mutate(sports_balls = as.integer(round(sports_balls,digits = 0)),
+                                              # convert sport ball to integer variable
+                          trash_wheel = "mr_trash") 
+                                              # creating additional variable recording trash_wheel           
+
+# visually inspect dataset
+view(mr_trash_data)
+```
+
+```{r}
+#Import Professor.Trash Wheel dataset, specifying the sheet and range
+
+prof_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
+                   sheet = 'Professor Trash Wheel',
+                   range = "A2:M120",
+                   na = c("NA", "", ".")) %>% 
+                   janitor::clean_names() %>% # use reasonable variable names
+                   drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
+                   mutate(trash_wheel = "prof_trash") 
+                                              # creating additional variable recording trash_wheel        
+
+# visually inspect dataset
+view(prof_trash_data)
+```
+
