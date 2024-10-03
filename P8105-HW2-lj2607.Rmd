@@ -54,7 +54,7 @@ ncol(nyc_transit_clean)
 
 Description of the dataset nyc_transit_clean:
 
-The dataset has `r ncol(nyc_transit_clean)` columns(variables) and `r nrow(nyc_transit_clean)` rows. The dimenison of the resulting data set is : `r dim(nyc_transit_clean)`. The dataset contain variables : `r names(nyc_transit_clean)`. The data are not tidy because the route number is spread across 11 columns and 
+The dataset has `r ncol(nyc_transit_clean)` columns and `r nrow(nyc_transit_clean)` rows. The dimenison of the resulting data set is : `r dim(nyc_transit_clean)`. The dataset contain variables : `r names(nyc_transit_clean)`. The data are not tidy because the route number is spread across 11 columns and 
 
 
 
@@ -98,6 +98,10 @@ prof_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx"
 
 # visually inspect dataset
 view(prof_trash_data)
+
+#Total weight of trash collected by professor trash wheel
+
+sum(prof_trash_data$weight_tons, na.rm = TRUE)
 ```
 
 ```{r}
@@ -114,6 +118,12 @@ gwynnda_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xl
 
 # visually inspect dataset
 view(gwynnda_trash_data)
+
+# total number of cigarette butts collected by Gwynnda in June of 2022
+total <- gwynnda_trash_data %>%
+         filter(month == "June", year == "2022") %>%
+         summarise(total_cigarette_butts = sum(cigarette_butts, na.rm = TRUE))
+total
 ```
 
 ```{r}
@@ -125,5 +135,8 @@ trash_wheel_data =
 # visually inspect dataset
 view(trash_wheel_data)
 ```
-```
+
+trash_wheel_data is composed of three datasets:mr_trash_data, prof_trash_data, gwynnda_trash_data.
+There are `r nrow(trash_wheel_data)` rows and `r ncol(trash_wheel_data)` in dataset
+and key variable include `r name(trash_wheel_data)`. The number of observation in datset is `r nrow(trash_wheel_data)`. The total weight of trash collected by professor trash wheel is 246.74 tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is 18120.
 
