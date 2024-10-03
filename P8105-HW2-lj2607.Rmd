@@ -76,8 +76,9 @@ mr_trash_data <- read_excel("Datasets/202409 Trash Wheel Collection Data.xlsx",
                    drop_na(dumpster) %>%      # drop the rows without specific dumpster                                                           information
                    mutate(sports_balls = as.integer(round(sports_balls,digits = 0)),
                                               # convert sport ball to integer variable
-                          trash_wheel = "mr_trash") 
-                                              # creating additional variable recording trash_wheel           
+                          trash_wheel = "mr_trash", # creating additional variable recording                                                            trash_wheel           
+                          year = as.numeric(year)) # convert year to numerical variable
+                                             
 
 # visually inspect dataset
 view(mr_trash_data)
@@ -116,6 +117,13 @@ view(gwynnda_trash_data)
 ```
 
 ```{r}
+#Combine three sheets to produce a single tidy sheet
+trash_wheel_data = 
+  bind_rows(mr_trash_data, prof_trash_data, gwynnda_trash_data) %>% 
+  janitor::clean_names()
 
+# visually inspect dataset
+view(trash_wheel_data)
+```
 ```
 
