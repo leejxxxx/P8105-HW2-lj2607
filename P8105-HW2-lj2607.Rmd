@@ -265,5 +265,5 @@ viewership <- read_csv("Datasets/viewers.csv") %>%
               series = as.numeric(series),
               episode = as.numeric(episode))
   
-knitr::kable(head(viewership_df, 10), caption = "First 10 rows")
+knitr::kable(head(viewership, 10), caption = "First 10 rows")
 ```
